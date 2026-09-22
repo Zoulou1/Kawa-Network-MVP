@@ -1,0 +1,111 @@
+openapi: 3.0.3
+info:
+  title: Kawa Network MVP API
+  version: 1.0.0
+  description: Farmer, plot, delivery, and queued risk-check API for Formative 1.
+servers:
+  - url: http://127.0.0.1:8000
+paths:
+  /api/farmers/:
+    get:
+      summary: List registered farmers
+      responses:
+        '200': {description: Farmer list}
+    post:
+      summary: Register a farmer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/FarmerInput'}
+      responses:
+        '201': {description: Farmer created}
+        '400': {$ref: '#/components/responses/ValidationError'}
+  /api/stations/:
+    get: {summary: List washing stations, responses: {'200': {description: Station list}}}
+    post: {summary: Register a washing station, responses: {'201': {description: Station created}}}
+  /api/plots/:
+    get: {summary: List plots, responses: {'200': {description: Plot list}}}
+    post:
+      summary: Register a plot and queue its risk check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/PlotInput'}
+      responses:
+        '201': {description: Plot created with queued risk-check evidence}
+        '400': {$ref: '#/components/responses/ValidationError'}
+  /api/plots/{plot_id}/risk-checks/:
+    get:
+      summary: List risk-check attempts for a plot
+      parameters: [{name: plot_id, in: path, required: true, schema: {type: integer}}]
+      responses: {'200': {description: Risk-check attempts}}
+  /api/deliveries/:
+    get: {summary: List deliveries, responses: {'200': {description: Delivery list}}}
+    post:
+      summary: Record a delivery with plot provenance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/DeliveryInput'}
+      responses:
+        '201': {description: Delivery recorded}
+        '400': {$ref: '#/components/responses/ValidationError'}
+  /api/stations/{station_code}/deliveries/:
+    get:
+      summary: Paginated station-facing delivery feed
+      parameters:
+        - {name: station_code, in: path, required: true, schema: {type: string}}
+        - {name: page, in: query, schema: {type: integer, minimum: 1}}
+        - {name: page_size, in: query, schema: {type: integer, minimum: 1, maximum: 100}}
+      responses: {'200': {description: Paginated delivery feed}}
+  /api/price-schedule/:
+    get:
+      summary: Get current configured price schedule
+      responses: {'200': {description: Price schedule}}
+components:
+  responses:
+    ValidationError:
+      description: Structured validation failure
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: object
+                properties:
+                  code: {type: string, example: validation_error}
+                  message: {type: string}
+                  fields: {type: object}
+  schemas:
+    FarmerInput:
+      type: object
+      required: [national_id, full_name, phone_number]
+      properties:
+        national_id: {type: string, example: RW1234567}
+        full_name: {type: string, example: Aline Mukamana}
+        phone_number: {type: string, example: '+250788123456'}
+    PlotInput:
+      type: object
+      required: [plot_code, farmer, administrative_sector, washing_station, area_hectares]
+      properties:
+        plot_code: {type: string, example: PLOT-001}
+        farmer: {type: integer, example: 1}
+        administrative_sector: {type: string, example: Mbuye}
+        washing_station: {type: integer, example: 1}
+        area_hectares: {type: number, format: decimal, example: 1.25}
+        latitude: {type: number, example: -2.45}
+        longitude: {type: number, example: 29.65}
+    DeliveryInput:
+      type: object
+      required: [plot, washing_station, delivery_date, weight_kg, cherry_grade]
+      properties:
+        plot: {type: integer, example: 1}
+        washing_station: {type: integer, example: 1}
+        delivery_date: {type: string, format: date, example: '2026-09-17'}
+        weight_kg: {type: number, format: decimal, example: 12.5}
+        cherry_grade: {type: string, enum: [A, B, C]}
+        recorded_by: {type: string, example: Emmanuel}
