@@ -11,7 +11,7 @@ The project uses Python 3.11 or newer, Django, Django REST Framework, and SQLite
 ## Quick start
 
 ```bash
-git clone <https://github.com/Zoulou1/Kawa-Network-MVP.git>
+git clone https://github.com/Zoulou1/Kawa-Network-MVP.git kawa-network-mvp
 cd kawa-network-mvp
 python3 -m venv .venv
 source .venv/bin/activate
