@@ -1,8 +1,5 @@
 # ADR-001: Queue plot risk checks and paginate the station feed
 
-**Status:** Accepted for Formative 1  
-**Date:** 2026-09-17
-
 ## Context
 
 The pilot station needs to record a farmer's delivery quickly on a phone and a slow connection. At the same time, the external land-risk registry can take between two and forty seconds to answer and can be unavailable for hours. Waiting for that service inside `POST /api/plots/` would make registration unreliable and would make it harder to add a delivery workflow later.

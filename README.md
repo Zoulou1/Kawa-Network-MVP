@@ -11,7 +11,7 @@ The project uses Python 3.11 or newer, Django, Django REST Framework, and SQLite
 ## Quick start
 
 ```bash
-git clone <repository-url>
+git clone <https://github.com/Zoulou1/Kawa-Network-MVP.git>
 cd kawa-network-mvp
 python3 -m venv .venv
 source .venv/bin/activate
@@ -127,4 +127,4 @@ If a remote is configured, push the branch and tag with `git push origin main` a
 
 ## AI-use annex
 
-AI assistance was used to help plan the API structure, draft some implementation and documentation text, and review the assignment checklist. The project was then assembled and checked locally with Django migrations and tests. The final author remains responsible for understanding, reviewing, and explaining the code.
+AI assistance was used to help plan the API structure, draft some implementation and documentation text, and review the assignment checklist. The project was then assembled and checked locally with Django migrations and tests. I remain responsible for understanding, reviewing, and explaining the code.
